@@ -1,0 +1,19 @@
+{
+  "name": "startrekconnection",
+  "version": "1.0.0",
+  "description": "Star Trek Connection",
+  "main": "index.js",
+  "scripts": {
+    "watch": "nodemon ./start.js"
+  },
+  "author": "kmartinix",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "express": "^4.17.3",
+    "request": "^2.81.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
