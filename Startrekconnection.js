@@ -8,12 +8,12 @@ let masterCrew = []
 const init = async() => {
   let showData = []
   let movieData = []
+
   for( element of starTrekTV)
   {
     const response = await axios.get('https://api.themoviedb.org/3/tv/' + element + '/aggregate_credits?api_key=' + tmdbAPIKey + '&language=en-US')
     showData.push(response.data)
   }
-
   for( element of starTrekMovies)
   {
     const response = await axios.get("https://api.themoviedb.org/3/movie/" + element + "/credits?api_key=" + tmdbAPIKey + "&language=en-US")
@@ -68,10 +68,10 @@ const getTVCast = async(tv_id) => {
    }
 }
 
-const starTrekConnection = async() => {
-  searchCast = await castLookup("Whole%20Nine%20Yards")
+const starTrekConnection = async(movie_title) => {
+  searchCast = await castLookup(movie_title)
   await init()
-  // console.log(searchCast)
+  connection = []
   try {
     if(searchCast){
           if (masterCast){
@@ -81,6 +81,7 @@ const starTrekConnection = async() => {
               for(const x of searchCast){
                 if(x.id == c.id) {
                   console.log(c)
+                  connection.push(c)
                 }
               }
             }
@@ -89,8 +90,22 @@ const starTrekConnection = async() => {
     }
   catch(error) {
    console.log(error);
+   return ""
    }
+   return connection
 }
 
 
-starTrekConnection()
+
+function StarTrekConnection(movie_title){
+  starTrekConnection(movie_title)
+}
+
+var outputs = {
+            connection: async function (title) {
+                console.log(title);
+                return starTrekConnection(title);
+            }
+    };
+
+module.exports = outputs
