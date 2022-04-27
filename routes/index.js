@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
 
 router.post('/connection', function (req, res) {
     connection = s.connection(req.body.movie)
-    .then(result => res.send("Submitted Successfully!\n" + result[0].name))
+    .then(result => res.send("Submitted Successfully!\n" + JSON.stringify(result)))
     .catch(err => res.send("Error!\n" + err));
 });
 
