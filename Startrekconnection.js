@@ -1,11 +1,12 @@
 const axios = require('axios');
+//Hard coded list of the Star Trek TV shows and movies
 const starTrekTV = ['580', '67198', '253', '1855', '314', '106393', '85949', '655', '85948', '82491', '116656', '103516', '1992']
 const starTrekMovies = ['13475', '188927', '54138', '201', '200', '199', '193', '152', '172', '168', '154', '174', '157', '918371']
 const tmdbAPIKey = process.env.TMDB_API_KEY
 let masterCast = []
 let masterCrew = []
 
-const init = async() => {
+const init = async() => { //Download all the ST cast and crew from TMDB
   let showData = []
   let movieData = []
 
@@ -30,7 +31,7 @@ const init = async() => {
     masterCrew = masterCrew.concat(movie.crew)
   }
 
-  masterCast = masterCast.concat(masterCrew)
+  masterCast = masterCast.concat(masterCrew) //Concat everything into a single list
 }
 
 const castLookup = async(name) => {
