@@ -4,7 +4,7 @@
   "description": "Star Trek Connection",
   "main": "index.js",
   "scripts": {
-    "watch": "nodemon ./start.js"
+     "start": "node start.js"
   },
   "author": "kmartinix",
   "license": "ISC",

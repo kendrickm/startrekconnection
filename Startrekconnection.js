@@ -1,7 +1,7 @@
 const axios = require('axios');
 //Hard coded list of the Star Trek TV shows and movies
 const starTrekTV = ['580', '67198', '253', '1855', '314', '106393', '85949', '655', '85948', '82491', '116656', '103516', '1992']
-const starTrekMovies = ['13475', '188927', '54138', '201', '200', '199', '193', '152', '172', '168', '154', '174', '157', '918371']
+const starTrekMovies = ['13475', '188927', '54138', '201', '200', '199', '193', '152', '172', '168', '154', '174', '157']
 const tmdbAPIKey = process.env.TMDB_API_KEY
 let masterCast = []
 let masterCrew = []
@@ -15,11 +15,14 @@ const init = async() => { //Download all the ST cast and crew from TMDB
     const response = await axios.get('https://api.themoviedb.org/3/tv/' + element + '/aggregate_credits?api_key=' + tmdbAPIKey + '&language=en-US')
     showData.push(response.data)
   }
+  console.log("LOG: Got star trek TV cast")
   for( element of starTrekMovies)
   {
+    console.log("LOG: Looking up movie " + element)
     const response = await axios.get("https://api.themoviedb.org/3/movie/" + element + "/credits?api_key=" + tmdbAPIKey + "&language=en-US")
     movieData.push(response.data)
   }
+  console.log("LOG: Got star trek movie cast")
 
   for (show of showData){
     masterCast = masterCast.concat(show.cast)
@@ -71,7 +74,9 @@ const getTVCast = async(tv_id) => {
 
 const starTrekConnection = async(movie_title) => {
   searchCast = await castLookup(movie_title)
+  console.log("LOG: Got input movie cast")
   await init()
+
   connection = []
   try {
     if(searchCast){
