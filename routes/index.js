@@ -7,13 +7,26 @@ var bodyParser = require("body-parser");
 router.use(bodyParser.urlencoded({ extended: false }));
 
 router.get('/', (req, res) => {
-  res.sendFile('index.html', { root:'public' });
+  res.render('index');
 });
 
+// router.post('/connection', function (req, res) {
+//     connection = s.connection(req.body.movie)
+//     .then(result => res.send("Submitted Successfully!\n" + JSON.stringify(result)))
+//     .catch(err => res.send("Error!\n" + err));
+// });
+
 router.post('/connection', function (req, res) {
-    connection = s.connection(req.body.movie)
-    .then(result => res.send("Submitted Successfully!\n" + JSON.stringify(result)))
+    id = s.movieID(req.body.movie)
+    .then(result => res.redirect('/connection/' + JSON.stringify(result)))
+    // .then(result => res.send("Submitted Successfully!\n" + JSON.stringify(result)))
     .catch(err => res.send("Error!\n" + err));
+});
+
+router.get('/connection/:slug', function(req, res) {
+  connection = s.connection(req.params.slug)
+      .then(result => res.render('connection', {data: result}))
+      .catch(err => res.send("Error!\n" + err));
 });
 
 module.exports = router;

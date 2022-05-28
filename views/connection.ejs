@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+Connecting the <%=data.length%> dots between the stars and the treks
+<ul>
+<%  data.forEach(function(c){ %>
+<li> <strong>Name: <%= c.name %> </strong> <a href='https://www.themoviedb.org/person/<%=c.id%>'> TMDB Profile </a> <br />
+ Department: <%= c.known_for_department %> </li>
+<% }); %>
+</ul>
+</body>
+</html>

@@ -7,6 +7,8 @@ let masterCast = []
 let masterCrew = []
 
 const init = async() => { //Download all the ST cast and crew from TMDB
+
+
   let showData = []
   let movieData = []
 
@@ -72,11 +74,15 @@ const getTVCast = async(tv_id) => {
    }
 }
 
-const starTrekConnection = async(movie_title) => {
-  searchCast = await castLookup(movie_title)
-  console.log("LOG: Got input movie cast")
-  await init()
-
+const starTrekConnection = async(movieID) => {
+  // searchCast = await castLookup(movie_title)
+  // console.log("LOG: Got input movie cast")
+  searchCast = await getMovieCast(movieID)
+  //Check to see if we've already init'd
+  if (masterCast.length == 0 ) {
+    await init()
+  }
+  
   connection = []
   try {
     if(searchCast){
@@ -111,6 +117,14 @@ var outputs = {
             connection: async function (title) {
                 console.log(title);
                 return starTrekConnection(title);
+            },
+            movieID: async function (title) {
+              console.log("Searching for movie " + title);
+              movie = await getMovie(title);
+
+              movieID = movie.data.results[0].id
+              console.log(movieID)
+              return  movieID;
             }
     };
 

@@ -4,12 +4,13 @@
   "description": "Star Trek Connection",
   "main": "index.js",
   "scripts": {
-     "start": "node start.js"
+    "start": "node start.js"
   },
   "author": "kmartinix",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.1",
+    "ejs": "^3.1.2",
     "express": "^4.17.3",
     "request": "^2.81.0"
   },

@@ -8,3 +8,10 @@ This lets you look a movie up and find who worked on it that also worekd on some
 ### Running
 
 `node start.js`
+
+
+
+
+### TODO
+* Lookup memory alpha page
+* Convert to npm library
