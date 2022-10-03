@@ -5,38 +5,72 @@ const starTrekMovies = ['13475', '188927', '54138', '201', '200', '199', '193', 
 const tmdbAPIKey = process.env.TMDB_API_KEY
 let masterCast = []
 let masterCrew = []
+var baseURL = ""
+var imageSizes = []
+var shown = false
 
 const init = async() => { //Download all the ST cast and crew from TMDB
 
+  const response = await axios.get('https://api.themoviedb.org/3/configuration?api_key=' + tmdbAPIKey + '&language=en-US')
+  baseURL = response.data.images.base_url
+  image_sizes = response.data.images.profile_sizes
+
+  console.log("LOG: Got init configuration")
+  console.log("LOG: Base URL: " + baseURL)
+  console.log("LOG: " + image_sizes)
 
   let showData = []
   let movieData = []
 
   for( element of starTrekTV)
   {
+    const titleResponse = await axios.get('https://api.themoviedb.org/3/tv/' + element + '?api_key=' + tmdbAPIKey + '&language=en-US')
+    const title = titleResponse.data.name
+    //console.log(titleResponse.data)
     const response = await axios.get('https://api.themoviedb.org/3/tv/' + element + '/aggregate_credits?api_key=' + tmdbAPIKey + '&language=en-US')
-    showData.push(response.data)
+    console.log("LOG: Processing up show " + title)
+    for (element of response.data.cast)
+    {
+      element.show_name=title
+      showData.push(element)
+    }
+    for (element of response.data.crew)
+    {
+      element.show_name=title
+      showData.push(element)
+    }
+
   }
-  console.log("LOG: Got star trek TV cast")
+
+  console.log("LOG: Got all star trek TV cast")
   for( element of starTrekMovies)
   {
-    console.log("LOG: Looking up movie " + element)
+
     const response = await axios.get("https://api.themoviedb.org/3/movie/" + element + "/credits?api_key=" + tmdbAPIKey + "&language=en-US")
-    movieData.push(response.data)
+    const titleResponse = await axios.get("https://api.themoviedb.org/3/movie/" + element + "?api_key=" + tmdbAPIKey + "&language=en-US")
+    const title = titleResponse.data.title
+    console.log("LOG: Processing up movie " + title)
+    for (element of response.data.cast)
+    {
+      element.show_name=title
+      movieData.push(element)
+    }
+    for (element of response.data.crew)
+    {
+      element.show_name=title
+      movieData.push(element)
+    }
   }
-  console.log("LOG: Got star trek movie cast")
+  console.log("LOG: Got all star trek movie cast")
+  masterCast = showData.concat(movieData)
+  ids = masterCast.map(o => o.id)
+  uniqueCast = masterCast.filter(({id}, index) => !ids.includes(id, index + 1))
+  console.log("LOG: " + uniqueCast.length + " total cast members")
 
-  for (show of showData){
-    masterCast = masterCast.concat(show.cast)
-    masterCrew = masterCrew.concat(show.crew)
-  }
+  masterCast = uniqueCast;
 
-  for (movie of movieData){
-    masterCast = masterCast.concat(movie.cast)
-    masterCrew = masterCrew.concat(movie.crew)
-  }
-
-  masterCast = masterCast.concat(masterCrew) //Concat everything into a single list
+  module.exports.baseURL = baseURL;
+  console.log("LOG: Finished init data")
 }
 
 const castLookup = async(name) => {
@@ -82,7 +116,7 @@ const starTrekConnection = async(movieID) => {
   if (masterCast.length == 0 ) {
     await init()
   }
-  
+
   connection = []
   try {
     if(searchCast){
@@ -92,7 +126,7 @@ const starTrekConnection = async(movieID) => {
             for(const c of masterCast){
               for(const x of searchCast){
                 if(x.id == c.id) {
-                  console.log(c)
+                  // console.log(c)
                   connection.push(c)
                 }
               }
@@ -114,6 +148,7 @@ function StarTrekConnection(movie_title){
 }
 
 var outputs = {
+            image_sizes: imageSizes[0],
             connection: async function (title) {
                 console.log(title);
                 return starTrekConnection(title);
@@ -125,7 +160,10 @@ var outputs = {
               movieID = movie.data.results[0].id
               console.log(movieID)
               return  movieID;
+            },
+            init: async function() {
+              await init();
             }
     };
 
-module.exports = outputs
+module.exports = outputs;

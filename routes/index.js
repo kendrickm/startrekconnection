@@ -3,7 +3,10 @@ const express = require('express');
 const router = express.Router();
 const request = require('request');
 var s = require('../Startrekconnection.js')
+s.init()
 var bodyParser = require("body-parser");
+var baseURL = s.baseURL
+var image_sizes = s.image_sizes
 router.use(bodyParser.urlencoded({ extended: false }));
 
 router.get('/', (req, res) => {
@@ -25,7 +28,7 @@ router.post('/connection', function (req, res) {
 
 router.get('/connection/:slug', function(req, res) {
   connection = s.connection(req.params.slug)
-      .then(result => res.render('connection', {data: result}))
+      .then(result => res.render('connection', {data: result, base_url:s.baseURL, image_size: image_sizes}))
       .catch(err => res.send("Error!\n" + err));
 });
 
